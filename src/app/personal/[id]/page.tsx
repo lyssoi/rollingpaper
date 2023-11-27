@@ -44,14 +44,30 @@ export default function Personal({ params }: { params: { id: string } }) {
     scrollToAdd(board.id, itemsRef);
   };
   const handleShare = async () => {
-    try {
-      await navigator.share({
-        title: '내 스트링캣 공유하기',
-        text: 'strcat을 달아주세요~~',
-        url: `https://strcat.me/${params.id}`,
-      });
-    } catch (err) {
-      console.log(err);
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: '내 스트링캣 공유하기',
+          text: 'strcat을 달아주세요~~',
+          url: `strcat.me/personal/${params.id}`,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      const id = params.id;
+      const base = 'strcat.me/personal/';
+      const url = base + id;
+      const handleCopyClipBoard = async (text: string) => {
+        try {
+          await navigator.clipboard.writeText(text);
+
+          alert('strcat주소가 복사되었습니다! 친구에게 공유해보세요');
+        } catch (error) {
+          alert('복사 실패하였습니다');
+        }
+      };
+      handleCopyClipBoard(url);
     }
   };
 

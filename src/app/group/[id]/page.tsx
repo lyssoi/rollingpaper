@@ -6,7 +6,7 @@ import StrcatBoard from '@/component/StrcatBoard';
 import { board } from '@/types/boards';
 import ContentPhoto from '@/component/ContentPhoto';
 import { useRecoilState } from 'recoil';
-import { themeState } from '@/recoil/theme';
+import { green, themeState } from '@/recoil/theme';
 import Drawer from '@/component/Drawer';
 import StrcatHeader from '@/component/StrcatHeader';
 import BottomButton from '@/component/BottomButton';
@@ -88,7 +88,7 @@ export default function Group({ params }: { params: { id: string } }) {
             className=" absolute bottom-[4.5rem] right-0 flex h-20 w-20 "
             onClick={scrollToTop}
           >
-            <ShortCut color={'#FFFFFF'} />
+            <ShortCut color={'bg-strcat-default-black'} />
           </button>
           {!isAdd &&
             (isOwner ? (

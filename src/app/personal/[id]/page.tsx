@@ -55,13 +55,10 @@ export default function Personal({ params }: { params: { id: string } }) {
         console.log(err);
       }
     } else {
-      const id = params.id;
-      const base = 'strcat.me/personal/';
-      const url = base + id;
+      const url = `https://strcat.me/personal/${params.id}`;
       const handleCopyClipBoard = async (text: string) => {
         try {
           await navigator.clipboard.writeText(text);
-
           alert('strcat주소가 복사되었습니다! 친구에게 공유해보세요');
         } catch (error) {
           alert('복사 실패하였습니다');

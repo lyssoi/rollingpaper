@@ -43,6 +43,17 @@ export default function Personal({ params }: { params: { id: string } }) {
     setIsAdd(true);
     scrollToAdd(board.id, itemsRef);
   };
+  const handleShare = async () => {
+    try {
+      await navigator.share({
+        title: '내 스트링캣 공유하기',
+        text: 'strcat을 달아주세요~~',
+        url: 'strcat.me',
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -114,6 +125,10 @@ export default function Personal({ params }: { params: { id: string } }) {
             </>
           ))}
         {!isAdd && <ContentPhoto />}
+        <div
+          className="  h-32 w-32 bg-slate-200"
+          onClick={() => handleShare()}
+        ></div>
       </div>
     </>
   );

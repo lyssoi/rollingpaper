@@ -48,7 +48,7 @@ export default function Personal({ params }: { params: { id: string } }) {
       await navigator.share({
         title: '내 스트링캣 공유하기',
         text: 'strcat을 달아주세요~~',
-        url: 'strcat.me',
+        url: `https://strcat.me/${params.id}`,
       });
     } catch (err) {
       console.log(err);
@@ -125,10 +125,12 @@ export default function Personal({ params }: { params: { id: string } }) {
             </>
           ))}
         {!isAdd && <ContentPhoto />}
-        <div
+        <button
           className="  h-32 w-32 bg-slate-200"
           onClick={() => handleShare()}
-        ></div>
+        >
+          공유하기
+        </button>
       </div>
     </>
   );

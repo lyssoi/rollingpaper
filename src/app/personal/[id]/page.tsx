@@ -73,7 +73,7 @@ export default function Personal({ params }: { params: { id: string } }) {
       <Drawer />
       <StrcatHeader />
       <div
-        className={`relative w-full  p-[24px] text-justify ${
+        className={`relative w-full  py-[24px] text-justify ${
           themeObj[board.theme].background
         } pb-[500px]`}
       >

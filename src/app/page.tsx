@@ -6,12 +6,14 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { themeState } from '@/recoil/theme';
 import { useRecoilState } from 'recoil';
+import IndexPage from './index/page';
 
 export default function Home() {
   const [Theme, SetTheme] = useRecoilState(themeState);
   const router = useRouter();
   return (
     <div className={`${Theme.background}`}>
+      <IndexPage />
       <div className=" fixed flex h-full w-full max-w-[calc(100vh*0.6)]  flex-col">
         <div className="basis-1/12">
           <Drawer />
@@ -45,7 +47,7 @@ export default function Home() {
                   </div>
                 </button>
               </div>
-              <div className="text-strcat-default-green inline">
+              <div className="inline text-strcat-default-green">
                 &nbsp;를 누르면 하나의 문자열을 할당받을 수 있어요. 링크를
                 공유해 문자열을 끝없이 이어보세요.
               </div>
@@ -64,7 +66,7 @@ export default function Home() {
                   </div>
                 </button>
               </div>
-              <div className="text-strcat-default-cyan inline text-[22px]">
+              <div className="inline text-[22px] text-strcat-default-cyan">
                 &nbsp;를 누르면 여러 문자열을 한 그룹으로 관리할 수 있어요.
                 주렁주렁~
               </div>

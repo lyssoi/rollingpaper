@@ -2,8 +2,7 @@ import Head from 'next/head';
 
 export default function Og() {
   return (
-    <Head>
-      <title>My page title</title>
+    <>
       <meta property="og:title" content="strcat" />
       <meta
         property="og:description"
@@ -11,6 +10,6 @@ export default function Og() {
       />
       <meta property="og:url" content="https://strcat.me" />
       <meta property="og:image" content="/App-Icon.png" />
-    </Head>
+    </>
   );
 }

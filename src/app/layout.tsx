@@ -14,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html className="h-full">
-      <Og />
+      <head>
+        <Og />
+      </head>
       <body className="h-full">
         <div className="m-auto h-full max-w-[calc(100vh*0.6)] font-sans">
           <RecoilRoot>

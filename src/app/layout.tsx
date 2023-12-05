@@ -17,7 +17,7 @@ export default function RootLayout({
       <head>
         <title>strcat : 글을 이어 만드는 롤링페이퍼</title>
         <Og />
-        <link rel="icon" href="/Fabicon.png"></link>
+        <link rel="icon" href="/Favicon.png"></link>
       </head>
       <body className="h-full">
         <div className="m-auto h-full max-w-[calc(100vh*0.6)] font-sans">

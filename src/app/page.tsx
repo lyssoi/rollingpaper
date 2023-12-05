@@ -13,16 +13,6 @@ export default function Home() {
   const router = useRouter();
   return (
     <>
-      <Head>
-        <title>My page title</title>
-        <meta property="og:title" content="strcat" />
-        <meta
-          property="og:description"
-          content="함께 문장을 이어 롤링페이퍼를 완성해보세요! : strcat"
-        />
-        <meta property="og:url" content="https://strcat.me" />
-        <meta property="og:image" content="/App-Icon.png" />
-      </Head>
       <div className={`${Theme.background}`}>
         <div className=" fixed flex h-full w-full max-w-[calc(100vh*0.6)]  flex-col">
           <div className="basis-1/12">

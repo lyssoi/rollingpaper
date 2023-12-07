@@ -63,7 +63,7 @@ const ObserveContent = ({ content, boardId, isAdd, boardTheme }: props) => {
         !isAdd &&
         observe.boardId === boardId &&
         observe.contentId === content.id
-          ? `${theme.highlightText} ' duration-500' mb-2   w-full  scale-110 text-[22px] opacity-100 transition-all`
+          ? `${theme.highlightText} ' duration-500' mb-2   w-full  scale-105 text-[22px] opacity-100 transition-all`
           : `${theme.defaultText} ' duration-500'  mb-2 w-full text-[22px] opacity-30 transition-all`
       }
     `}

@@ -33,8 +33,8 @@ const ObserveContent = ({ content, boardId, isAdd, boardTheme }: props) => {
         });
       },
       {
-        rootMargin: '-30% 0% -65% 0%',
-        threshold: ratio,
+        rootMargin: '-30% 0% -70% 0%',
+        threshold: [],
       },
     );
     if (ref.current) {
@@ -63,8 +63,8 @@ const ObserveContent = ({ content, boardId, isAdd, boardTheme }: props) => {
         !isAdd &&
         observe.boardId === boardId &&
         observe.contentId === content.id
-          ? `${theme.highlightText} ' duration-500' inline  w-full  text-[22px] opacity-100 transition-all`
-          : `${theme.defaultText} ' duration-500'  inline  w-full text-[22px] opacity-30 transition-all`
+          ? `${theme.highlightText} ' duration-500' mb-2   w-full  scale-110 text-[22px] opacity-100 transition-all`
+          : `${theme.defaultText} ' duration-500'  mb-2 w-full text-[22px] opacity-30 transition-all`
       }
     `}
       >
@@ -74,10 +74,10 @@ const ObserveContent = ({ content, boardId, isAdd, boardTheme }: props) => {
         observe.boardId === boardId &&
         observe.contentId === content.id && (
           <div
-            className={`bg-strcat-green absolute right-[22px] z-10 mt-[1px] animate-slide pl-[2px] text-white opacity-100`}
+            className={`absolute right-[22px] z-10 mt-[1px] animate-slide bg-strcat-green pl-[2px] text-white opacity-100`}
           >
             <div
-              className={`bg-strcat-green relative top-[-3px] z-20 w-full whitespace-pre-wrap`}
+              className={`relative top-[-3px] z-20 w-full whitespace-pre-wrap bg-strcat-green`}
             >{`From: ${observe.writer} `}</div>
           </div>
         )}

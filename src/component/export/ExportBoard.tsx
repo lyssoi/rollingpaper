@@ -1,31 +1,47 @@
-import { content } from '@/types/content';
 import Default from './Default';
-import Writer from './Writer';
 import LineBreak from './LineBreak';
+import Writer from './Writer';
+import { bodyFont, titleFont } from '@/recoil/font';
+import { themeObj } from '@/recoil/theme/theme';
+import { content } from '@/types/content';
 import { exportThemeEnum } from '@/types/export';
 
 interface Props {
   title: string;
-  data: content[] | undefined;
+  content: content[] | undefined;
   exportTheme: string;
+  boardTheme: 'strcat' | 'calm' | 'green' | 'cyan' | undefined;
 }
 
-export default function ExportBoard({ title, data, exportTheme }: Props) {
+export default function ExportBoard({
+  title,
+  content,
+  exportTheme,
+  boardTheme,
+}: Props) {
+  if (!boardTheme) return;
+  const theme = themeObj[boardTheme];
   return (
-    <div>
-      <div className="mb-20 mt-5 text-[22px]">
-        <div className=" mb-10">{title}</div>
-        <div className=" text-justify  text-[18px]">
-          {data?.map((item: content) => (
+    <div className={`${theme.bgTheme.background} ${theme.textTheme.title}`}>
+      <div className={`mx-[24px]`}>
+        <div className={`${titleFont.category1} pb-[32px] pt-[40px]`}>
+          {title}
+        </div>
+        <div className={` pb-[40px]  text-justify ${bodyFont.category1}`}>
+          {content?.map((item: content) => (
             <span key={item.id}>
               {exportTheme === exportThemeEnum.default && (
-                <Default content={item} />
-              )}
-              {exportTheme === exportThemeEnum.writer && (
-                <Writer content={item} />
+                <Default
+                  content={item}
+                  color={theme.textTheme.default}
+                  highlightcolor={theme.textTheme.highlight}
+                />
               )}
               {exportTheme === exportThemeEnum.lineBreak && (
-                <LineBreak content={item} />
+                <LineBreak content={item} color={theme.textTheme.default} />
+              )}
+              {exportTheme === exportThemeEnum.writer && (
+                <Writer content={item} color={theme.textTheme.default} />
               )}
             </span>
           ))}

@@ -1,8 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { calm, cyan, green, strcat, themeState } from '@/recoil/theme';
-import Image from 'next/image';
+
+import {
+  ThemeCalm,
+  ThemeCyan,
+  ThemeGreen,
+  ThemeStrcat,
+} from '@/component/Icon/Theme';
+import { calm, cyan, green, strcat, themeState } from '@/recoil/theme/theme';
 
 export default function ThemeChange() {
   const [Theme, setTheme] = useRecoilState(themeState);
@@ -10,61 +17,44 @@ export default function ThemeChange() {
     setTheme(newTheme);
   };
   return (
-    <>
+    <div className="mx-[34px]">
       <div className="flex w-full flex-row items-center justify-center">
-        <div className="basis-8"></div>
-        <Image
-          src="/strcatButton.png"
-          width={52}
-          height={52}
-          alt="strcatButton"
-          className="mt-20 basis-14 "
+        <div
+          className="mt-20 basis-1/6 "
           onClick={() => handleThemeChange(strcat)}
-        />
-        <div className="basis-8"></div>
-        <Image
-          src="/CalmButton.png"
-          width={52}
-          height={52}
-          alt="CalmButton"
-          className="mt-20 basis-14"
+        >
+          <ThemeStrcat />
+          <div className={`${Theme.textTheme.default} `}>strcat</div>
+        </div>
+        <div className="basis-1/6"></div>
+        <div
+          className="mt-20 basis-1/6 "
           onClick={() => handleThemeChange(calm)}
-        />
-        <div className="basis-8"></div>
-        <Image
-          src="/GreenButton.png"
-          width={52}
-          height={52}
-          alt="GreenButton"
-          className="mt-20 basis-14"
+        >
+          <ThemeCalm />
+          <div className={`basis-1/6 text-center ${Theme.textTheme.default} `}>
+            Calm
+          </div>
+        </div>
+        <div className="basis-1/6"></div>
+        <div
+          className="mt-20 basis-1/6 "
           onClick={() => handleThemeChange(green)}
-        />
-        <div className="basis-8"></div>
-        <Image
-          src="/CyanButton.png"
-          width={52}
-          height={52}
-          alt="CyanButton"
-          className="mt-20 basis-14"
+        >
+          <ThemeGreen />
+          <div className={`basis-1/6 text-center ${Theme.textTheme.default} `}>
+            green
+          </div>
+        </div>
+        <div className="basis-1/6"></div>
+        <div
+          className="mt-20 basis-1/6  "
           onClick={() => handleThemeChange(cyan)}
-        />
-        <div className="basis-8"></div>
-      </div>
-      <div className="flex w-full flex-row items-center justify-center">
-        <div className=" mt-9 basis-8"></div>
-        <div className={`basis-14 text-center ${Theme.defaultText} `}>
-          strcat
+        >
+          <ThemeCyan />
+          <div className={`text-center ${Theme.textTheme.default} `}>Cyan</div>
         </div>
-        <div className="basis-8"></div>
-        <div className={`basis-14 text-center ${Theme.defaultText} `}>Calm</div>
-        <div className="basis-8"></div>
-        <div className={`basis-14 text-center ${Theme.defaultText} `}>
-          green
-        </div>
-        <div className="basis-8"></div>
-        <div className={`basis-14 text-center ${Theme.defaultText} `}>Cyan</div>
-        <div className="basis-8"></div>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,8 @@
-import useModal from '@/hooks/useModal';
+import BottomButton from '../BottomButton';
+import ModalBackground from '../Icon/ModalBackground';
+import ModalClose from '../Icon/ModalClose';
+import ModalErrorBackground from '../Icon/ModalErrorBackground';
+import { titleFont } from '@/recoil/font';
 
 interface Props {
   content: string;
@@ -6,19 +10,74 @@ interface Props {
 }
 
 export default function Error({ content, handleModalClose }: Props) {
+  const array = content.replace(/\\n/g, '\n').split('\n');
   return (
-    <div className="flex h-full w-full flex-col bg-green-700">
-      <div className="flex h-[70%] items-center justify-center p-10 text-center text-2xl">
-        {content}
-      </div>
-      <div className="flex h-[30%] justify-center">
-        <button
-          className="h-[80%] basis-4/5 bg-amber-200 text-3xl"
-          onClick={handleModalClose}
-        >
-          돌아가기
-        </button>
-      </div>
-    </div>
+    <>
+      {array.length !== 1 ? (
+        <div className="relative h-[312px] w-[312px]">
+          <ModalBackground />
+          <div className="absolute top-0 h-[312px] w-[312px] items-center justify-center p-[16px]">
+            <div className="flex w-full justify-end">
+              <button onClick={handleModalClose}>
+                <ModalClose />
+              </button>
+            </div>
+            <p
+              className={`absolute left-0 top-[97px] flex w-full items-center justify-center px-[24px] text-center ${titleFont.category1}`}
+            >
+              {content
+                .replace(/\\n/g, '\n')
+                .split('\n')
+                .map((item, idx) => {
+                  return idx === 0 ? item : [<br key={idx} />, item];
+                })}{' '}
+            </p>
+            <div className="absolute bottom-[16px] left-0 flex w-full justify-between px-[16px]">
+              <BottomButton
+                textColor=""
+                height="42px"
+                color="bg-[#6CD8ED]"
+                name="돌아가기"
+                width="w-full"
+                disabled={false}
+                onClickHandler={handleModalClose}
+              ></BottomButton>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex h-[196px] w-[312px] flex-col">
+          <ModalErrorBackground />
+          <div className="absolute flex h-[196px] w-[312px] flex-col items-center justify-center">
+            <div className="flex w-full justify-end pr-[16px]">
+              <button onClick={handleModalClose}>
+                <ModalClose />
+              </button>
+            </div>
+            <div
+              className={`flex h-[90px] items-center justify-center px-[24px] text-center ${titleFont.category1}`}
+            >
+              {content
+                .replace(/\\n/g, '\n')
+                .split('\n')
+                .map((item, idx) => {
+                  return idx === 0 ? item : [<br key={idx} />, item];
+                })}
+            </div>
+            <div className=" bottom-2 flex w-[280px] items-center justify-center">
+              <BottomButton
+                textColor=""
+                height="42px"
+                color="bg-[#6CD8ED]"
+                name="돌아가기"
+                width="w-full"
+                disabled={false}
+                onClickHandler={handleModalClose}
+              ></BottomButton>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

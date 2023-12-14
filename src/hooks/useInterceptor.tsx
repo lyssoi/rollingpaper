@@ -27,16 +27,19 @@ export const useInterceptor = () => {
         <Error content="500 에러 발생 " handleModalClose={closeModal} />,
       );
     }
-    if (errorStatus === 401) {
-      route.push('/login');
-    }
+    // if (errorStatus === 401) {
+    //   route.push('/login');
+    // }
   };
 
   const requestInterceptor =
     axiosInstance.interceptors.request.use(requestHandler);
   const responseInterceptor = axiosInstance.interceptors.response.use(
     (response) => responseHandler(response),
-    (error) => errorHandler(error.response.status),
+    (error) => {
+      errorHandler(error.response.status);
+      return Promise.reject(error);
+    },
   );
 
   useEffect(() => {

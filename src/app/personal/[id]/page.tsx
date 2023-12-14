@@ -1,47 +1,64 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { axiosInstance } from '@/utils/axios';
-import StrcatBoard from '@/component/StrcatBoard';
-import BottomButton from '@/component/BottomButton';
-import ContentPhoto from '@/component/ContentPhoto';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { themeObj, themeState } from '@/recoil/theme';
-import Drawer from '@/component/Drawer';
-import StrcatHeader from '@/component/StrcatHeader';
-import { observeState } from '@/recoil/observe';
-import { useRouter } from 'next/navigation';
-import { board } from '@/types/boards';
-import { scrollToAdd, setMap } from '@/utils/scrollTo';
 
+import NoneContent from './NoneContent';
+import Summary from './Summary';
+import BottomButton from '@/component/BottomButton';
+import Loading from '@/component/Loading';
+import StrcatBoard from '@/component/StrcatBoard';
+import { useLogin } from '@/hooks/useLogin';
+import { useScroll } from '@/hooks/useScroll';
+import { themeState, titleState } from '@/recoil/state';
+import { board } from '@/types/boards';
+import { axiosInstance } from '@/utils/axios';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
+require('intersection-observer');
 export default function Personal({ params }: { params: { id: string } }) {
-  const [board, setBoard] = useState<board>({
-    id: 0,
-    title: '',
-    theme: 'strcat',
-    content: [],
-  });
-  const [isAdd, setIsAdd] = useState<boolean>(false);
+  const [board, setBoard] = useState<board[]>([]);
   const [isOwner, setIsOwner] = useState<boolean>(false);
-  const itemsRef = useRef(new Map());
-  const [observe] = useRecoilState(observeState);
-  const [theme, setTheme] = useRecoilState(themeState);
+  const [windowHeight, setWindowHeight] = useState(0);
+  const [theme] = useRecoilState(themeState);
   const router = useRouter();
+  const [isLogin] = useLogin();
+  const [, setTitle] = useRecoilState(titleState);
+  const { isHidden, setIsHidden } = useScroll();
+
   useEffect(() => {
     axiosInstance
-      //.get(`/boards/${props.params.id}`)
-      .get(`/api/personal`)
+      .get(`/boards/${params.id}`)
       .then((data) => {
-        setBoard(data.data.board);
-        setTheme(data.data.board.theme);
+        setBoard([data.data.board]);
         setIsOwner(data.data.isOwner);
       })
-      .catch((error) => {});
-  }, [setTheme]);
+      .catch((err) => {
+        if (err.response.status === 406) router.push('/not-found');
+      });
+    if (window) setWindowHeight(window.innerHeight);
+  }, [params.id]);
 
-  const handleClick = () => {
-    setIsAdd(true);
-    scrollToAdd(board.id, itemsRef);
+  useEffect(() => {
+    if (!board.length) return;
+    setTitle(board[0].title);
+  }, [board]);
+
+  const handleClickWrite = () => {
+    router.push(`${params.id}/add`);
+  };
+
+  const handleClickCreate = () => {
+    if (!isLogin) {
+      localStorage.setItem(
+        'strcat_login_success_url',
+        `/personal/${params.id}`,
+      );
+      router.push('/login');
+    } else {
+      router.push('/personal/${params.id}');
+    }
   };
   const handleShare = async () => {
     if (navigator.share) {
@@ -70,71 +87,52 @@ export default function Personal({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <Drawer />
-      <StrcatHeader />
       <div
+<<<<<<< HEAD
         className={`relative w-full  py-[24px] text-justify ${
           themeObj[board.theme].background
         } pb-[500px]`}
+=======
+        className={`${theme.bgTheme.background} min-h-full`}
+        onClick={() => {
+          setIsHidden(!isHidden);
+        }}
+>>>>>>> origin
       >
-        <StrcatBoard
-          board={board}
-          ref={(node) => setMap(node, board, itemsRef)}
-          isAdd={isAdd}
-          setIsAdd={setIsAdd}
-        />
-        {!isAdd &&
-          (isOwner ? (
-            <div className="fixed bottom-5 left-0 z-50 flex w-full items-center justify-center">
-              <div className="flex w-full max-w-[calc(100vh*0.6)] items-center justify-center px-[24px]">
-                <BottomButton
-                  height="h-[42px]"
-                  name="저장"
-                  width="basis-1/5"
-                  onClickHandler={() => router.push(`./${params.id}/export`)}
-                  disabled={false}
-                  color={`bg-white`}
-                />
-                <BottomButton
-                  name="공유"
-                  height="h-[42px]"
-                  width="basis-1/5"
-                  onClickHandler={() => router.push(`./${params.id}/summary`)}
-                  disabled={false}
-                  color={`bg-strcat-green`}
-                />
-                <BottomButton
-                  name="이어서 글쓰기"
-                  height="h-[42px]"
-                  width="basis-3/5"
-                  onClickHandler={handleClick}
-                  disabled={!observe.boardId}
-                  color={`bg-strcat-cyan`}
-                />
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className=" fixed bottom-0 left-0 z-50 flex w-full items-center justify-center">
-                <div className="flex w-full max-w-[calc(100vh*0.6)] items-center justify-center px-[24px] ">
-                  <BottomButton
-                    name="스트링캣 만들기"
-                    height="h-[42px]"
-                    width="basis-1/2"
-                    onClickHandler={() => router.push(`../create`)}
-                    disabled={false}
-                    color={`bg-white`}
-                  />
-                  <BottomButton
-                    name="이어서 글쓰기"
-                    width="basis-1/2"
-                    height="h-[42px]"
-                    onClickHandler={handleClick}
-                    disabled={!observe.boardId}
-                    color={`bg-strcat-cyan`}
+        {board.length ? (
+          <>
+            <div className="pt-[100px]" />
+            {board[0].contents.length !== 0 && <Summary id={params.id} />}
+            <div className="pt-[150px]" />
+            {board[0].contents.length === 0 && (
+              <NoneContent handleClickNoneContent={handleClickWrite} />
+            )}
+            <StrcatBoard board={board[0]} />
+          </>
+        ) : (
+          <Loading />
+        )}
+        <div style={{ minHeight: `${windowHeight}px` }}></div>
+        {isOwner ? (
+          <div
+            className={`fixed bottom-0 pb-[12px] left-0 z-20 flex w-full items-center justify-center transition-transform duration-300 ${
+              isHidden ? 'translate-y-full' : 'translate-y-0'
+            }`}
+          >
+            <div className="flex w-full max-w-md items-center justify-center px-[24px] space-x-[12px]">
+              <div className="flex basis-1/12 items-center justify-center">
+                <div
+                  className={`h-[46px] flex rounded-[5px] w-[46px] justify-center items-center ${theme.bgTheme.leftCTA}`}
+                >
+                  <Image
+                    src="/Download.svg"
+                    width={24}
+                    height={24}
+                    alt="Download"
                   />
                 </div>
               </div>
+<<<<<<< HEAD
             </>
           ))}
         {!isAdd && <ContentPhoto />}
@@ -144,6 +142,58 @@ export default function Personal({ params }: { params: { id: string } }) {
         >
           공유하기
         </button>
+=======
+              <BottomButton
+                textColor="text-strcat-bright-yellow"
+                name="공유하기"
+                height="h-[46px]"
+                width="basis-5/12"
+                onClickHandler={() => router.push(`${params.id}/summary`)}
+                disabled={false}
+                color={`${theme.bgTheme.leftCTA}`}
+              />
+              <BottomButton
+                textColor="text-strcat-bright-yellow"
+                name="글쓰기"
+                height="h-[46px]"
+                width="basis-5/12"
+                onClickHandler={handleClickWrite}
+                disabled={false}
+                color={`${theme.bgTheme.rightCTA}`}
+              />
+            </div>
+          </div>
+        ) : (
+          <>
+            <div
+              className={`fixed bottom-0 pb-[12px] left-0 z-20 flex w-full items-center justify-center transition-transform duration-300 ${
+                isHidden ? 'translate-y-full' : 'translate-y-0'
+              }`}
+            >
+              <div className="flex w-full max-w-md items-center justify-center px-[24px] space-x-[12px] ">
+                <BottomButton
+                  textColor=" text-strcat-white2"
+                  name="나도 만들기"
+                  width="basis-1/3"
+                  height="h-[46px]"
+                  onClickHandler={handleClickCreate}
+                  disabled={false}
+                  color={`${theme.bgTheme.leftCTA}`}
+                />
+                <BottomButton
+                  textColor=" text-strcat-bright-yellow"
+                  name="글쓰기"
+                  width="basis-2/3"
+                  height="h-[46px]"
+                  onClickHandler={handleClickWrite}
+                  disabled={false}
+                  color={`${theme.bgTheme.rightCTA}`}
+                />
+              </div>
+            </div>
+          </>
+        )}
+>>>>>>> origin
       </div>
     </>
   );

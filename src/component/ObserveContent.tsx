@@ -1,40 +1,63 @@
-import { content } from '@/types/content';
-import { useEffect, useRef } from 'react';
-import { useRecoilState } from 'recoil';
-import { observeState } from '@/recoil/observe';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import React from 'react';
-import { themeObj, themeState } from '@/recoil/theme';
+
+import PhotoModal from './Modal/PhotoModal';
+import PhotoPreview from '@/app/personal/[id]/PhotoPreview';
+import { themeState } from '@/recoil/state';
+import { content } from '@/types/content';
+import { observeContent } from '@/types/observe';
+import { focusToHighlight } from '@/utils/focusToHighlight';
+
 interface props {
   content: content;
-  boardId: number;
-  isAdd: boolean;
-  boardTheme: 'strcat' | 'calm' | 'green' | 'cyan';
+  observe: observeContent;
+  theme: themeState;
+  setObserve: Dispatch<SetStateAction<observeContent>>;
+  openModal: (modalComponent: JSX.Element) => void;
+  closeModal: () => void;
 }
 
-const ObserveContent = ({ content, boardId, isAdd, boardTheme }: props) => {
+const ObserveContent = ({
+  content,
+  observe,
+  setObserve,
+  theme,
+  openModal,
+  closeModal,
+}: props) => {
   const ref = useRef<HTMLHeadingElement | null>(null);
-  const [observe, setObserve] = useRecoilState(observeState);
-  const [theme, setTheme] = useRecoilState(themeState);
+
+  const handleClickPhoto = () => {
+    openModal(
+      <PhotoModal
+        photoUrl={content.photoUrl}
+        closeModal={closeModal}
+        text={content.text}
+      />,
+    );
+  };
+
   useEffect(() => {
-    let ratio = 0.01;
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(({ isIntersecting, boundingClientRect }) => {
-          ratio = 10 / boundingClientRect.height;
-          if (!isAdd && isIntersecting) {
+        entries.forEach(({ isIntersecting }) => {
+          if (isIntersecting) {
             setObserve(() => ({
-              boardId: boardId,
               contentId: content.id,
-              photoUrl: content.photo,
+              photoUrl: content.photoUrl,
               writer: content.writer,
             }));
-            setTheme(() => themeObj[boardTheme]);
           }
         });
       },
       {
+<<<<<<< HEAD
         rootMargin: '-30% 0% -70% 0%',
         threshold: [],
+=======
+        rootMargin: '-40% 0% -60% 0%',
+        threshold: [0],
+>>>>>>> origin
       },
     );
     if (ref.current) {
@@ -43,33 +66,34 @@ const ObserveContent = ({ content, boardId, isAdd, boardTheme }: props) => {
     return () => {
       observer.disconnect();
     };
-  }, [
-    boardId,
-    content.id,
-    content.photo,
-    content.writer,
-    setObserve,
-    isAdd,
-    setTheme,
-    boardTheme,
-  ]);
+  }, []);
 
   return (
-    <div className="inline">
+    <div ref={ref}>
+      {observe.contentId === content.id && observe.photoUrl !== '' && (
+        <PhotoPreview
+          photoUrl={content.photoUrl}
+          handleClickPhoto={handleClickPhoto}
+        />
+      )}
       <div
-        ref={ref}
-        className={`
+        className={`inline pt-[3px] pb-[4px] leading-[31px] text-body-size1 tracking-[-0.36px] font-medium
       ${
-        !isAdd &&
-        observe.boardId === boardId &&
         observe.contentId === content.id
+<<<<<<< HEAD
           ? `${theme.highlightText} ' duration-500' mb-2   w-full  scale-105 text-[22px] opacity-100 transition-all`
           : `${theme.defaultText} ' duration-500'  mb-2 w-full text-[22px] opacity-30 transition-all`
+=======
+          ? `${theme.bgTheme.contentContainer} ${theme.textTheme.highlight} transition `
+          : `${theme.textTheme.default} opacity-[0.15]`
+>>>>>>> origin
       }
     `}
+        onClick={() => focusToHighlight(ref)}
       >
         {content.text}
       </div>
+<<<<<<< HEAD
       {!isAdd &&
         observe.boardId === boardId &&
         observe.contentId === content.id && (
@@ -81,6 +105,15 @@ const ObserveContent = ({ content, boardId, isAdd, boardTheme }: props) => {
             >{`From: ${observe.writer} `}</div>
           </div>
         )}
+=======
+      {observe.contentId === content.id && (
+        <div
+          className={`text-right transition-all ${theme.textTheme.writer} text-body-size2`}
+        >{`From: ${
+          observe.writer.length ? observe.writer : '익명의 스트링캣'
+        } `}</div>
+      )}
+>>>>>>> origin
     </div>
   );
 };
